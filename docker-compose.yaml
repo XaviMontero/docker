@@ -1,5 +1,4 @@
 version: '3'
-
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
@@ -25,14 +24,42 @@ services:
       - ./host:/etc/nginx/vhost.d
       - ./media:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  www:
-    image: nginx
+  wordpress:
+    image: wordpress:php7.3-fpm
     restart: always
     expose:
       - "80"
-    volumes:
-      - ./media:/usr/share/nginx/html:ro
     environment:
-      - VIRTUAL_HOST=kpyvara.live,www.kpyvara.live
-      - LETSENCRYPT_HOST=kpyvara.live,www.kpyvara.live
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: Tambo2019
+      WORDPRESS_DB_NAME: montero
+      working_dir: /var/www/html
+      VIRTUAL_HOST: kpyvara.live,www.kpyvara.live
+      LETSENCRYPT_HOST: kpyvara.live,www.kpyvara.live
+
+    volumes:
+      - ./media:/var/www/html:ro
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    links:
+      - mysql:mysql
+  mysql:
+    image: mysql:8.0.13
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: montero
+      MYSQL_ROOT_PASSWORD: Tambo2019
+    volumes:
+      - ./media/baseDatosDockerMysql:/var/lib/mysql
+
+  phpmyadmin:
+    image: corbinu/docker-phpmyadmin
+    links:
+      - mysql:mysql
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: Tambo2019
+      MYSQL_PORT_3306_TCP_ADDR: mysql
+
