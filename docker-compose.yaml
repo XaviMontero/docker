@@ -13,7 +13,6 @@ services:
       - ./media:/usr/share/nginx/html
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     restart: always
@@ -50,10 +49,10 @@ services:
       MYSQL_DATABASE: montero
       MYSQL_ROOT_PASSWORD: Tambo2019
     volumes:
-      - ./media/baseDatosDockerMysql:/var/lib/mysql
+      - ./base/baseDatosDockerMysql:/var/lib/mysql
 
   phpmyadmin:
-    image: corbinu/docker-phpmyadmin
+    image: corbinu/docker-phpmyadmin  
     links:
       - mysql:mysql
     ports:
