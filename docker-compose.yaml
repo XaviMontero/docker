@@ -36,7 +36,6 @@ services:
       working_dir: /var/www/html
       VIRTUAL_HOST: kpyvara.live,www.kpyvara.live
       LETSENCRYPT_HOST: kpyvara.live,www.kpyvara.live
-
     volumes:
       - ./media:/var/www/html:ro
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
